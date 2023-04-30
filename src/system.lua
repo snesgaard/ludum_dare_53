@@ -451,9 +451,10 @@ function menu.spin_main_menu(id, menu_state)
         game.system.scene.request("test_level")
     elseif item == "Quit" then
         love.event.quit()
+    else
+        menu_state.done = false
     end
 
-    menu_state.done = false
 end
 
 function menu.spin()
