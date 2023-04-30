@@ -212,4 +212,26 @@ function drawable.menu(id)
     gfx.pop()
 end
 
+function drawable.text_box(id)
+    gfx.push("all")
+    
+    nw.drawable.push_transform(id)
+    nw.drawable.push_state(id)
+
+    local text_opt = {
+        align = stack.get(nw.component.align, id),
+        valign = stack.get(nw.component.valign, id),
+        font = stack.get(nw.component.font, id),
+    }
+
+    local area = stack.ensure(nw.component.gui_box, id)
+    local text = stack.ensure(nw.component.text, id)
+    gfx.setColor(0.1, 0.2, 0.8, 0.6)
+    gfx.rectangle("fill", area:unpack(5))
+    gfx.setColor(1, 1, 1)
+    painter.draw_text(text, area, text_opt)
+
+    gfx.pop()
+end
+
 return drawable

@@ -44,4 +44,8 @@ end
 
 function component.main_menu_action() return true end
 
+function component.gui_box(x, y, w, h) return spatial(x, y, w, h) end
+
+function component.text(t) return t end
+
 return component
