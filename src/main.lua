@@ -27,11 +27,16 @@ function love.load()
     loader.test_level()
 
     game.system.explosion.spawn(100, 100)
+
+    bg_music = love.audio.newSource("art/sound/bar.mp3", "static")
+    bg_music:setLooping(true)
+    love.audio.play(bg_music)
 end
 
 function love.update(dt)
     if not paused then event.emit("update", dt) end
     event_loop()
+    print(bg_music:getDuration())
 end
 
 function love.draw()
