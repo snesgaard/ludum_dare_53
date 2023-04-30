@@ -14,6 +14,8 @@ local function event_loop()
     while event.spin() > 0 do
         if not game.system.score.player_lose() then
             nw.system.timer.spin()
+            nw.system.particles.spin()
+            game.system.explosion.spin()
             game.system.customer.spin()
             game.system.player_control.spin()
             game.system.score.spin()
@@ -23,10 +25,12 @@ end
 
 function love.load()
     loader.test_level()
+
+    game.system.explosion.spawn(100, 100)
 end
 
 function love.update(dt)
-    event.emit("update", dt)
+    if not paused then event.emit("update", dt) end
     event_loop()
 end
 
@@ -54,5 +58,6 @@ end
 
 function love.keypressed(key)
     if key == "escape" then love.event.quit() end
+    if key == "p" then paused = not paused end
     input.keypressed(key)
 end

@@ -177,6 +177,7 @@ function score.life()
 end
 
 function score.lose_life()
+    if constant.invincible then return end
     stack.set(nw.component.life, score, score.life() - 1)
 end
 
@@ -239,9 +240,6 @@ function score.draw_controls()
 
     painter.draw_text("Move :: <- ->", box, text_opt)
     painter.draw_text("Interact :: space", space_box, text_opt)
-
-
-
 
     gfx.pop()
 end
@@ -309,11 +307,69 @@ end
 function customer.failure(id)
     stack.remove(nw.component.customer_desire, id)
     game.system.score.lose_life()
+
+    local pos = stack.get(nw.component.position, id)
+    if pos then game.system.explosion.spawn(pos.x, pos.y- 34) end
+end
+
+local explosion = {}
+
+function explosion.flag() return true end
+
+explosion.particle_op = {
+    image = gfx.prerender(8, 8, function(w, h) gfx.rectangle("fill", 0, 0, w, h) end),
+    buffer = 60,
+    lifetime = {0.5, 0.75},
+    emit = 60,
+    damp = 25,
+    speed = {100, 900},
+    area = {"normal", 10, 10},
+    color = {
+        gfx.hex2color("ced09eff"),  
+        gfx.hex2color("cdad59ff"),
+        gfx.hex2color("564159ff"),
+        gfx.hex2color("00000000")
+    },
+    acceleration = {0, -30},
+    spread = math.pi * 2,
+    size = {1, 2, 2}
+}
+
+function explosion.spawn(x, y)
+    local id = nw.ecs.id.strong("explosion")
+
+    stack.assemble(
+        {
+            {nw.component.position, x, y},
+            {nw.component.drawable, nw.drawable.explosion},
+            {nw.component.timer, 0.1},
+            {nw.component.particles, explosion.particle_op},
+            {explosion.flag}
+        },
+        id
+    )
+end
+
+function explosion.spin_once(id)
+    if nw.system.timer.is_done(id) and nw.system.particles.empty(id) then
+        stack.destroy(id)
+    end
+end
+
+function explosion.update()
+    for id, _ in stack.view_table(explosion.flag) do
+        explosion.spin_once(id)
+    end
+end
+
+function explosion.spin()
+    for _, dt in event.view("update") do explosion.update(dt) end
 end
 
 return {
     post = post,
     player_control = player_control,
     customer = customer,
-    score = score
+    score = score,
+    explosion = explosion
 }

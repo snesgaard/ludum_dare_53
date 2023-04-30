@@ -149,4 +149,27 @@ function drawable.frame(id)
     gfx.pop()
 end
 
+local function draw_flash(id)
+    if nw.system.timer.is_done(id) then return end
+    gfx.circle("fill", 0, 0, 30)
+end
+
+local function draw_particles(id)
+    local p = stack.get(nw.component.particles, id)
+    if not p then return end
+    gfx.draw(p, 0, 0)
+end
+
+function drawable.explosion(id)
+    gfx.push("all")
+
+    nw.drawable.push_transform(id)
+    nw.drawable.push_state(id)
+
+    draw_particles(id)
+    draw_flash(id)
+
+    gfx.pop()
+end
+
 return drawable
