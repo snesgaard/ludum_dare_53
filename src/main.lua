@@ -36,7 +36,6 @@ end
 function love.update(dt)
     if not paused then event.emit("update", dt) end
     event_loop()
-    print(bg_music:getDuration())
 end
 
 function love.draw()
