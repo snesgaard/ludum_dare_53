@@ -268,7 +268,7 @@ local customer = {}
 local function food_probability(food_type)
     if food_type == constant.food.wine then
         local d = stack.ensure(nw.component.difficulty, "setting")
-        local limits = {
+            local limits = {
             easy = 60,
             hard = 50,
             sudden = 30
@@ -532,7 +532,7 @@ function menu.spin()
             menu.decrement()
         elseif key == "down" then
             menu.increment()
-        elseif key == "space" then
+        elseif key == "space" or key == "return" then
             menu.confirm()
         end
     end

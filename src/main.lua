@@ -59,7 +59,7 @@ function love.draw()
         gfx.setColor(1, 1, 1)
         gfx.rectangle("fill", area:unpack())
         gfx.setColor(0, 0, 0)
-        painter.draw_text("YOU LOSE! : (", area, opt)
+        painter.draw_text("YOU LOSE! : (\nPress R to restart.", area, opt)
         gfx.setColor(1, 1, 1)
         gfx.pop()
     end
@@ -73,7 +73,7 @@ function love.keypressed(key)
     end
     if key == "r" then
         stack.reset()
-        loader.test_level()
+        loader.main_menu()
     end
     input.keypressed(key)
 end
