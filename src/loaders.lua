@@ -17,13 +17,13 @@ function loaders.test_level()
             id
         )
         if i == 0 then
-            stack.set(nw.component.drawable, id, nw.drawable.post)
+            stack.set(nw.component.drawable, id, nw.drawable.food_store)
             stack.set(nw.component.food_store, id, constant.food.pizza)
-            stack.set(nw.component.color, id, 0.8, 0.5, 0.1)
+            stack.set(nw.component.layer, id, painter.layer.desk)
         elseif i == 5 then
-            stack.set(nw.component.drawable, id, nw.drawable.post)
+            stack.set(nw.component.drawable, id, nw.drawable.food_store)
             stack.set(nw.component.food_store, id, constant.food.wine)
-            stack.set(nw.component.color, id, 0.8, 0.3, 0.3)
+            stack.set(nw.component.layer, id, painter.layer.desk)
         elseif i == 6 then
             stack.set(nw.component.food_store, id, constant.food.tomato)
             stack.set(nw.component.color, id, 1.0, 0.1, 0.3)

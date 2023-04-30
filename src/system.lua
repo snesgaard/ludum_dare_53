@@ -91,7 +91,6 @@ function player_control.trigger_food_store(post_id)
     local food = stack.get(nw.component.food_store, post_id)
     if not food then return end
     table.insert(food_stack, food)
-    print("the stack", food_stack)
 end
 
 function player_control.trigger_constumer(post_id)
@@ -220,6 +219,10 @@ function customer.pick_food_desire()
     return stack.get_table(nw.component.food_store):values():shuffle():head()
 end
 
+function customer.pick_patron()
+    return constant.patron:values():shuffle():head()
+end
+
 function customer.spin_once(id, settings)
     local scale = 1 + math.log(1 + customer.get_runtime() / 100.0)
     local timer = stack.ensure(
@@ -234,6 +237,7 @@ function customer.spin_once(id, settings)
         customer.failure(id)
     else
         stack.set(nw.component.customer_desire, id, customer.pick_food_desire())
+        stack.set(nw.component.patron, id, customer.pick_patron())
     end
 
     stack.remove(nw.component.customer_timer, id)

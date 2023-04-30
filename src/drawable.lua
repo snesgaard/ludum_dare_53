@@ -14,6 +14,49 @@ function drawable.post(id)
     return w, h
 end
 
+local function food_store_frame(food_store_type)
+    local atlas = get_atlas("art/characters")
+    if food_store_type == constant.food.pizza then
+        return atlas:get_frame("stores/beer")
+    elseif food_store_type == constant.food.wine then
+        return atlas:get_frame("stores/wine")
+    end
+end
+
+function drawable.food_store(id)
+    gfx.push("all")
+
+    nw.drawable.push_transform(id)
+    nw.drawable.push_state(id)
+    local frame = food_store_frame(stack.get(nw.component.food_store, id))
+    if frame then
+        frame:draw("body")
+    else
+        local w, h = 64, 64
+        gfx.rectangle("line", -w / 2, -h, w, h)
+    end
+
+    gfx.pop()
+end
+
+local function draw_patron(patron_type)
+    if patron_type == constant.patron.wizard then
+        local frame = get_atlas("art/characters"):get_frame("patrons/wizard")
+        frame:draw("body")
+        local _, _, w, h = frame.quad:getViewport()
+        return w, h
+    elseif patron_type == constant.patron.orc then
+        local frame = get_atlas("art/characters"):get_frame("patrons/orc")
+        frame:draw("body")
+        local _, _, w, h = frame.quad:getViewport()
+        return w, h
+    else
+        local w, h = 64, 64
+        gfx.rectangle("line", -w / 2, -h, w, h)
+        return w, h
+    end
+end
+
 local function anger_color(id, desire, timer)
     local e = ease.linear
     if not timer or not desire then
@@ -36,7 +79,7 @@ local function anger_shake(id, desire, timer)
     local freq = e(t, 0, 200, 1)
 
     return amp * math.sin(timer.time * freq)
-end
+end 
 
 function drawable.costumer(id)
     --local w, h = drawable.post(id)
@@ -49,9 +92,7 @@ function drawable.costumer(id)
 
     anger_color(id, desire, timer)
     gfx.translate(anger_shake(id, desire, timer), 0)
-    local frame = get_atlas("art/characters"):get_frame("patrons/wizard")
-    frame:draw("body")
-    local _, _, _, h = frame.quad:getViewport()
+    local _, h = draw_patron(stack.get(nw.component.patron, id) or constant.patron.orc)
     
     if not desire or not timer then return gfx.pop() end
     
@@ -91,15 +132,6 @@ function drawable.food_stack(id)
         painter.draw_food(food)
         gfx.translate(0, -14)
     end
-
-    gfx.pop()
-end
-
-function drawable.food_store(id)
-    gfx.push("all")
-
-    nw.drawable.push_transform(id)
-    nw.drawable.push_state(id)
 
     gfx.pop()
 end
