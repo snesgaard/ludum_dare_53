@@ -15,6 +15,7 @@ local function event_loop()
         if not game.system.score.player_lose() then
             nw.system.timer.spin()
             nw.system.particles.spin()
+            game.system.sound.spin()
             game.system.explosion.spin()
             game.system.customer.spin()
             game.system.player_control.spin()
@@ -30,6 +31,7 @@ function love.load()
 
     bg_music = love.audio.newSource("art/sound/bar.mp3", "static")
     bg_music:setLooping(true)
+    bg_music:setVolume(1)
     love.audio.play(bg_music)
 end
 

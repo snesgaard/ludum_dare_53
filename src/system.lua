@@ -67,14 +67,17 @@ function player_control.move_using_func(func)
     if not post_id then return end
     local post_pos = stack.ensure(nw.component.position, post_id)
     stack.set(nw.component.position, constant.id.player, post_pos.x, post_pos.y)
+    return true
 end
 
 function player_control.move_left()
     player_control.move_using_func(post.nearest_left)
+    game.system.sound.move()
 end
 
 function player_control.move_right()
     player_control.move_using_func(post.nearest_right)
+    game.system.sound.move()
 end
 
 function player_control.move_up()
@@ -91,6 +94,7 @@ function player_control.trigger_food_store(post_id)
     local food = stack.get(nw.component.food_store, post_id)
     if not food then return end
     table.insert(food_stack, food)
+    game.system.sound.pickup()
 end
 
 function player_control.trigger_constumer(post_id)
@@ -124,7 +128,6 @@ function player_control.spin()
         elseif key == "up" then
             player_control.move_up()
         elseif key == "down" then
-            print("down")
             player_control.move_down()
         elseif key == "space" then
             player_control.trigger()
@@ -302,6 +305,7 @@ end
 function customer.success(id)
     stack.remove(nw.component.customer_desire, id)
     game.system.score.increment()
+    game.system.sound.success()
 end
 
 function customer.failure(id)
@@ -348,6 +352,8 @@ function explosion.spawn(x, y)
         },
         id
     )
+
+    game.system.sound.boom()
 end
 
 function explosion.spin_once(id)
@@ -366,10 +372,45 @@ function explosion.spin()
     for _, dt in event.view("update") do explosion.update(dt) end
 end
 
+local sound = {}
+
+sound.source = {
+    boom = love.audio.newSource("art/sound/boom.wav", "static"),
+    success = love.audio.newSource("art/sound/success.wav", "static"),
+    move = love.audio.newSource("art/sound/move.wav", "static"),
+    pickup = love.audio.newSource("art/sound/pickup.wav", "static")
+}
+
+function sound.boom()
+    sound.source.boom:stop()
+    sound.source.boom:play()
+end
+
+function sound.success()
+    sound.source.success:stop()
+    sound.source.success:play()
+end
+
+function sound.move()
+    sound.source.move:setVolume(0.65)
+    sound.source.move:stop()
+    sound.source.move:play()
+end
+
+function sound.pickup()
+    sound.source.pickup:stop()
+    sound.source.pickup:play()
+end
+
+function sound.spin()
+
+end
+
 return {
     post = post,
     player_control = player_control,
     customer = customer,
     score = score,
-    explosion = explosion
+    explosion = explosion,
+    sound = sound
 }
