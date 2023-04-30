@@ -189,9 +189,13 @@ function drawable.menu(id)
         font = painter.font(32)
     }
 
+    local frame = get_atlas("art/characters"):get_frame("gui/main_menu")
+
     for index, key in ipairs(menu_state.items) do
+        local slice_key = string.format("item%i", index)
+        local box = frame.slices[slice_key]
         gfx.setColor(0.1, 0.2, 0.8, 0.6)
-        gfx.rectangle("fill", box:unpack(5))
+        --gfx.rectangle("fill", box:unpack(5))
         
         if index == menu_state.index then
             gfx.setColor(0.8, 0.8, 0.2)
@@ -203,10 +207,9 @@ function drawable.menu(id)
             gfx.setColor(0.1, 0.2, 0.4)
         else
             gfx.setColor(1, 1, 1)
+            gfx.setColor(gfx.hex2color("e8ecdd"))
         end
         painter.draw_text(key, box, text_opt)
-
-        box = box:down(0, 5)
     end
 
     gfx.pop()
@@ -227,8 +230,9 @@ function drawable.text_box(id)
     local area = stack.ensure(nw.component.gui_box, id)
     local text = stack.ensure(nw.component.text, id)
     gfx.setColor(0.1, 0.2, 0.8, 0.6)
-    gfx.rectangle("fill", area:unpack(5))
+    --gfx.rectangle("fill", area:unpack(5))
     gfx.setColor(1, 1, 1)
+    gfx.setColor(gfx.hex2color("e8ecdd"))
     painter.draw_text(text, area, text_opt)
 
     gfx.pop()

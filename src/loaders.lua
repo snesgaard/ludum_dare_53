@@ -90,11 +90,23 @@ function loaders.main_menu()
         constant.difficulty.sudden_death,
         "Quit"
     )
+
+    local frame = get_atlas("art/characters"):get_frame("gui/main_menu")
+
+    stack.assemble(
+        {
+            {nw.component.drawable, nw.drawable.frame},
+            {nw.component.frame, frame},
+            {nw.component.layer, painter.layer.background}
+        },
+        "menu_bg"
+    )
+
     stack.assemble(
         {
             {nw.component.menu, menu_items, 1},
             {nw.component.drawable, nw.drawable.menu},
-            {nw.component.position, painter.relative(0.5, 0.55)},
+            --{nw.component.position, painter.relative(0.5, 0.55)},
             {nw.component.main_menu_action}
         },
         constant.id.main_menu
@@ -103,8 +115,7 @@ function loaders.main_menu()
     stack.assemble(
         {
             {nw.component.drawable, nw.drawable.text_box},
-            {nw.component.position, painter.relative(0.5, 0.25)},
-            {nw.component.gui_box, spatial():expand(300, 75):unpack()},
+            {nw.component.gui_box, frame.slices.title:unpack()},
             {nw.component.text, "Fantasy Retail Simulator"},
             {nw.component.align, "center"},
             {nw.component.valign, "center"},
