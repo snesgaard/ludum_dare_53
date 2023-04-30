@@ -197,9 +197,10 @@ function score.draw()
     nw.drawable.push_transform(score)
 
     local layout = stack.ensure(compute_layout, score)
-    gfx.setColor(0.1, 0.2, 0.8, 0.6)
-    gfx.rectangle("fill", layout.border:unpack(5))
+    --gfx.setColor(0.1, 0.2, 0.8, 0.6)
+    --gfx.rectangle("fill", layout.border:unpack(5))
     gfx.setColor(1, 1, 1)
+    get_atlas("art/characters"):get_frame("gui/left"):draw()
 
     local text_opt = {
         align = "left",
@@ -237,8 +238,9 @@ function score.draw_controls()
     nw.drawable.push_transform(score)
 
     gfx.setColor(0.1, 0.2, 0.8, 0.6)
-    gfx.rectangle("fill", border:unpack(5))
+    --gfx.rectangle("fill", border:unpack(5))
     gfx.setColor(1, 1, 1)
+    get_atlas("art/characters"):get_frame("gui/right"):draw(border.x, border.y)
 
     local text_opt = {
         align = "right",
