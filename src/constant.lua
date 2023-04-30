@@ -13,5 +13,5 @@ return {
         wizard = "wizard"
     },
     max_food_stack = 3,
-    max_lives = 3000
+    max_lives = 3
 }

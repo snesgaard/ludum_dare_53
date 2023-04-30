@@ -136,16 +136,18 @@ local score = {}
 
 local function compute_layout()
     local margin = 5
-    local score_text = spatial(0, 0, 50, 15)
+    local score_text = spatial(5, 5, 50, 12)
     local score_num = score_text:right(margin, 0)
     local strike_text = score_text:down(0, margin)
     local strike_num = strike_text:right(margin, 0)
+    local border = Spatial.join(score_text, score_num, strike_text, strike_num):expand(10, 10)
 
     return {
         score_text = score_text,
         score_num = score_num,
         strike_text = strike_text,
-        strike_num = strike_num
+        strike_num = strike_num,
+        border = border
     }
 end
 
@@ -185,9 +187,14 @@ end
 function score.draw()
     gfx.push("all")
     nw.drawable.push_transform(score)
+
     local layout = stack.ensure(compute_layout, score)
+    gfx.setColor(0.1, 0.2, 0.8, 0.6)
+    gfx.rectangle("fill", layout.border:unpack(5))
+    gfx.setColor(1, 1, 1)
+
     local text_opt = {
-        align = "center",
+        align = "left",
         valign = "center",
         font = painter.font(48)
     }
@@ -200,10 +207,41 @@ function score.draw()
     gfx.push()
     gfx.translate(layout.strike_num:leftcenter():unpack())
     for i = 1, l do
-        gfx.translate(10, 0)
         gfx.circle("fill", 0, 0, 4)
+        gfx.translate(10, 0)
     end
     gfx.pop()
+
+    gfx.pop()
+
+    score.draw_controls()
+end
+
+function score.draw_controls()
+    local x, y = painter.screen_size()
+    local box = spatial(x, 0, 75, 12):left():move(-5, 5)
+    local space_box = box:down(0, 5)
+    local border = Spatial.join(box, space_box):expand(10, 10)
+    
+    gfx.push("all")
+
+    nw.drawable.push_transform(score)
+
+    gfx.setColor(0.1, 0.2, 0.8, 0.6)
+    gfx.rectangle("fill", border:unpack(5))
+    gfx.setColor(1, 1, 1)
+
+    local text_opt = {
+        align = "right",
+        valign = "center",
+        font = painter.font(48)
+    }
+
+    painter.draw_text("Move :: <- ->", box, text_opt)
+    painter.draw_text("Interact :: space", space_box, text_opt)
+
+
+
 
     gfx.pop()
 end
