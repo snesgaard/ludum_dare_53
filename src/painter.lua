@@ -73,6 +73,14 @@ end
 
 function painter.draw()
     gfx.push()
+    if stack.get(nw.component.difficulty, "setting") == "sudden_death" then
+        local w, h = gfx.getWidth(), gfx.getHeight()
+        gfx.translate(w / 2, h / 2)
+        local t = game.system.customer.get_runtime()
+        local f = math.min(5, ease.linear(t, 0.5, 3, 240))
+        gfx.rotate(t * f)
+        gfx.translate(-w / 2, -h / 2)
+    end
     gfx.scale(painter.scale, painter.scale)
     stack.get_table(nw.component.drawable):keys()
         :filter(remove_hidden)

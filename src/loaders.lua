@@ -61,7 +61,7 @@ function loaders.test_level(difficulty)
     if difficulty == "hard" then
         game.system.score.set_life(3)
     elseif difficulty == "sudden_death" then
-        game.system.score.set_life(1)
+        game.system.score.set_life(2)
     else
         game.system.score.set_life(5)
     end

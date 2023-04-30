@@ -16,7 +16,7 @@ return {
     difficulty = {
         easy = "Play (Easy)",
         hard = "Play (Hard)",
-        sudden_death = "Play (Sudden Death)"
+        sudden_death = "Play (Drunk)"
     },
     max_food_stack = 3,
     max_lives = 5,
