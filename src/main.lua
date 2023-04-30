@@ -28,15 +28,14 @@ local function event_loop()
 end
 
 function love.load()
-    --loader.main_menu()
     game.system.scene.request("main_menu")
-    --loader.test_level()
 
-    love.audio.setVolume(0)
     bg_music = love.audio.newSource("art/sound/bar.mp3", "static")
     bg_music:setLooping(true)
     bg_music:setVolume(1)
     love.audio.play(bg_music)
+
+    print(ease.linear(10, 0, 1, 1))
 end
 
 function love.update(dt)
@@ -60,7 +59,7 @@ function love.draw()
         gfx.setColor(1, 1, 1)
         gfx.rectangle("fill", area:unpack())
         gfx.setColor(0, 0, 0)
-        painter.draw_text("YOU LOSE!", area, opt)
+        painter.draw_text("YOU LOSE! : (", area, opt)
         gfx.setColor(1, 1, 1)
         gfx.pop()
     end

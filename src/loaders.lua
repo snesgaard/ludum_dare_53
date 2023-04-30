@@ -1,6 +1,7 @@
 local loaders = {}
 
-function loaders.test_level()
+function loaders.test_level(difficulty)
+    local difficulty = difficulty or "hard"
     stack.reset()
 
     local r = 0.3
@@ -57,16 +58,43 @@ function loaders.test_level()
         "desk"
     )
 
+    if difficulty == "hard" then
+        game.system.score.set_life(3)
+    elseif difficulty == "sudden_death" then
+        game.system.score.set_life(1)
+    else
+        game.system.score.set_life(5)
+    end
+
+    stack.set(nw.component.difficulty, "setting", difficulty)
+
     game.system.score.show()
 end
 
+function loaders.test_level_easy()
+    return loaders.test_level("easy")
+end
+
+function loaders.test_level_hard()
+    return loaders.test_level("hard")
+end
+
+function loaders.test_level_sudden()
+    return loaders.test_level("sudden_death")
+end
+
 function loaders.main_menu()
-    local menu_items = list("Play", "Options", "Quit")
+    local menu_items = list(
+        constant.difficulty.easy,
+        constant.difficulty.hard,
+        constant.difficulty.sudden_death,
+        "Quit"
+    )
     stack.assemble(
         {
             {nw.component.menu, menu_items, 1},
             {nw.component.drawable, nw.drawable.menu},
-            {nw.component.position, painter.relative(0.5, 0.6)},
+            {nw.component.position, painter.relative(0.5, 0.55)},
             {nw.component.main_menu_action}
         },
         constant.id.main_menu

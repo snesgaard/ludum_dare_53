@@ -1,3 +1,4 @@
 art/**/atlas*
 art/**/*.json
 build/**
+art/cover.png

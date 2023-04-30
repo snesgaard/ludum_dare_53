@@ -13,7 +13,12 @@ return {
         orc = "orc",
         wizard = "wizard"
     },
+    difficulty = {
+        easy = "Play (Easy)",
+        hard = "Play (Hard)",
+        sudden_death = "Play (Sudden Death)"
+    },
     max_food_stack = 3,
-    max_lives = 3,
+    max_lives = 5,
     invincible = false,
 }

@@ -181,7 +181,7 @@ function drawable.menu(id)
     nw.drawable.push_transform(id)
     nw.drawable.push_state(id)
 
-    local box = spatial():expand(46, 16)
+    local box = spatial():expand(64, 16)
 
     local text_opt = {
         align = "center",

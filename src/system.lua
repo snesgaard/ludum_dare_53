@@ -175,6 +175,10 @@ function score.increment(a)
     score.set(s + a)
 end
 
+function score.set_life(life)
+    stack.set(nw.component.life, score, life)
+end
+
 function score.life()
     return stack.ensure(nw.component.life, score)
 end
@@ -225,7 +229,8 @@ function score.draw_controls()
     local x, y = painter.screen_size()
     local box = spatial(x, 0, 75, 12):left():move(-5, 5)
     local space_box = box:down(0, 5)
-    local border = Spatial.join(box, space_box):expand(10, 10)
+    local escape_box = space_box:down(0, 5)
+    local border = Spatial.join(box, space_box, escape_box):expand(10, 10)
     
     gfx.push("all")
 
@@ -243,6 +248,7 @@ function score.draw_controls()
 
     painter.draw_text("Move :: <- ->", box, text_opt)
     painter.draw_text("Interact :: space", space_box, text_opt)
+    painter.draw_text("Quit :: escape", escape_box, text_opt)
 
     gfx.pop()
 end
@@ -259,32 +265,91 @@ end
 
 local customer = {}
 
+local function food_probability(food_type)
+    if food_type == constant.food.wine then
+        local d = stack.ensure(nw.component.difficulty, "setting")
+        local limits = {
+            easy = 60,
+            hard = 50,
+            sudden = 30
+        }
+        return math.min(1, ease.linear(customer.get_runtime(), 0, 1, limits[d] or limits.hard))
+    end
+
+    return 1
+end
+
 function customer.pick_food_desire()
-    return stack.get_table(nw.component.food_store):values():shuffle():head()
+    local food_types = stack.get_table(nw.component.food_store):values()
+    if food_types:size() == 0 then return end
+    local weights = food_types:map(food_probability)
+    local sum_of_weight = weights:reduce(sum, 0)
+    local rng = love.math.random() * sum_of_weight
+    for index, w in ipairs(weights) do
+        rng = rng - w
+        if rng <= 0 then return food_types[index] end
+    end
+
+    return food_types:tail()
 end
 
 function customer.pick_patron()
     return constant.patron:values():shuffle():head()
 end
 
+function customer.get_max_spawn()
+    local d = stack.ensure(nw.component.difficulty, "setting")
+    local scaling = {
+        easy = 1.25,
+        hard = 1,
+        sudden = 0.35
+    }
+    local s = scaling[d] or scaling.hard
+
+    if customer.get_runtime() < 15 * s then
+        return 1
+    elseif customer.get_runtime() < 30 * s then
+        return 2
+    elseif customer.get_runtime() < 45 * s then
+        return 3
+    else
+        return math.huge
+    end
+end
+
+function customer.desire_count()
+    return stack.get_table(nw.component.customer_desire):size()
+end
+
 function customer.spin_once(id, settings)
-    local scale = 1 + math.log(1 + customer.get_runtime() / 100.0)
+    local d = stack.ensure(nw.component.difficulty, "setting")
+
+    local factors = {
+        easy = 200,
+        hard = 100,
+        sudden = 50
+    }
+    local f = factors[d] or factors.hard
+
+    local scale = 1 + math.log(1 + customer.get_runtime() / f)
     local timer = stack.ensure(
         nw.component.customer_timer, id,
         settings.duration_min, settings.duration_max,
         1.0 / scale
     )
     if not nw.system.timer.is_done(timer) then return end
+    stack.remove(nw.component.customer_timer, id)
+
+    local can_spawn = customer.desire_count() < customer.get_max_spawn()
 
     if stack.has(nw.component.customer_desire, id) then
         stack.remove(nw.component.customer_desire, id)
         customer.failure(id)
-    else
+    elseif can_spawn then
         stack.set(nw.component.customer_desire, id, customer.pick_food_desire())
         stack.set(nw.component.patron, id, customer.pick_patron())
     end
 
-    stack.remove(nw.component.customer_timer, id)
 end
 
 function customer.get_timer(id)
@@ -447,8 +512,12 @@ function menu.spin_main_menu(id, menu_state)
     if not stack.get(nw.component.main_menu_action, id) then return end
     if not menu_state.done then return end
     local item = menu_state.items[menu_state.index]
-    if item == "Play" then
-        game.system.scene.request("test_level")
+    if item == constant.difficulty.easy then
+        game.system.scene.request("test_level_easy")
+    elseif item == constant.difficulty.hard then
+        game.system.scene.request("test_level_hard")
+    elseif item == constant.difficulty.sudden_death then
+        game.system.scene.request("test_level_sudden")
     elseif item == "Quit" then
         love.event.quit()
     else

@@ -50,4 +50,6 @@ function component.text(t) return t end
 
 function component.focus() return true end
 
+function component.difficulty(d) return d or constant.difficulty.hard end
+
 return component
