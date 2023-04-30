@@ -1,6 +1,7 @@
 return {
     id = {
-        player = "player"
+        player = "player",
+        main_menu = "main_menu"
     },
     food = dict{
         pizza = "pizza",
@@ -14,5 +15,5 @@ return {
     },
     max_food_stack = 3,
     max_lives = 3,
-    invincible = true,
+    invincible = false,
 }

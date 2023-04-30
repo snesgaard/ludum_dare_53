@@ -35,4 +35,13 @@ function component.time(t) return t or 0 end
 
 function component.patron(patron) return patron end
 
+function component.menu(items, init)
+    return {
+        items = items,
+        index = init
+    }
+end
+
+function component.main_menu_action() return true end
+
 return component

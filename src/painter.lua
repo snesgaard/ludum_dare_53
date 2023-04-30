@@ -67,10 +67,15 @@ function painter.draw_food(food, x, y)
     gfx.pop()
 end
 
+local function remove_hidden(id)
+    return not stack.get(nw.component.hidden, id)
+end
+
 function painter.draw()
     gfx.push()
     gfx.scale(painter.scale, painter.scale)
     stack.get_table(nw.component.drawable):keys()
+        :filter(remove_hidden)
         :sort(sort_drawers)
         :visit(draw_entity)
     gfx.pop()

@@ -172,4 +172,44 @@ function drawable.explosion(id)
     gfx.pop()
 end
 
+function drawable.menu(id)
+    local menu_state = stack.get(nw.component.menu, id)
+    if not menu_state then return end
+
+    gfx.push("all")
+
+    nw.drawable.push_transform(id)
+    nw.drawable.push_state(id)
+
+    local box = spatial():expand(46, 16)
+
+    local text_opt = {
+        align = "center",
+        valign = "center",
+        font = painter.font(32)
+    }
+
+    for index, key in ipairs(menu_state.items) do
+        gfx.setColor(0.1, 0.2, 0.8, 0.6)
+        gfx.rectangle("fill", box:unpack(5))
+        
+        if index == menu_state.index then
+            gfx.setColor(0.8, 0.8, 0.2)
+            local mode = menu_state.done and "fill" or "line"
+            gfx.rectangle(mode, box:unpack(5))
+        end
+
+        if index == menu_state.index and menu_state.done then
+            gfx.setColor(0.1, 0.2, 0.4)
+        else
+            gfx.setColor(1, 1, 1)
+        end
+        painter.draw_text(key, box, text_opt)
+
+        box = box:down(0, 5)
+    end
+
+    gfx.pop()
+end
+
 return drawable

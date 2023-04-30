@@ -250,6 +250,11 @@ end
 function score.spin()
     stack
         .init(nw.component.drawable, score, score.draw)
+        .init(nw.component.hidden, score)
+end
+
+function score.show()
+    stack.set(nw.component.hidden, score, false)
 end
 
 local customer = {}
@@ -263,7 +268,7 @@ function customer.pick_patron()
 end
 
 function customer.spin_once(id, settings)
-    local scale = 1 + math.log(1 + customer.get_runtime() / 100.0)
+    local scale = 1 + math.log(1 + customer.get_runtime() / 75.0)
     local timer = stack.ensure(
         nw.component.customer_timer, id,
         settings.duration_min, settings.duration_max,
@@ -406,11 +411,93 @@ function sound.spin()
 
 end
 
+local menu = {}
+
+function menu.decrement()
+    for id, menu_state in stack.view_table(nw.component.menu) do
+        local index = menu_state.index
+        if menu_state.done then
+        elseif not index or index <= 1 then
+            menu_state.index = #menu_state.items
+        else
+            menu_state.index = index - 1
+        end
+    end
+end
+
+function menu.increment()
+    for id, menu_state in stack.view_table(nw.component.menu) do
+        local index = menu_state.index
+        if menu_state.done then
+        elseif not index or #menu_state.items <= index then
+            menu_state.index = 1
+        else
+            menu_state.index = index + 1
+        end
+    end
+end
+
+function menu.confirm()
+    for id, menu_state in stack.view_table(nw.component.menu) do
+        if menu_state.index then menu_state.done = true end
+    end
+end
+
+function menu.spin_main_menu(id, menu_state)
+    if not stack.get(nw.component.main_menu_action, id) then return end
+    if not menu_state.done then return end
+    local item = menu_state.items[menu_state.index]
+    if item == "Play" then
+        game.system.scene.request("test_level")
+    elseif item == "Quit" then
+        love.event.quit()
+    end
+
+    menu_state.done = false
+end
+
+function menu.spin()
+    for _, key in event.view("keypressed") do
+        if key == "up" then
+            menu.decrement()
+        elseif key == "down" then
+            menu.increment()
+        elseif key == "space" then
+            menu.confirm()
+        end
+    end
+
+    for id, menu_state in stack.view_table(nw.component.menu) do
+        menu.spin_main_menu(id, menu_state)
+    end
+end
+
+local scene = {}
+
+function scene.request_data(key)
+    return key
+end
+
+function scene.request(key)
+    stack.set(scene.request_data, scene, key)
+end
+
+function scene.load()
+    local key = stack.get(scene.request_data, scene)
+    if not key then return end
+    local level = loader[key]
+    if not level then return end
+    stack.reset()
+    level()
+end
+
 return {
     post = post,
     player_control = player_control,
     customer = customer,
     score = score,
     explosion = explosion,
-    sound = sound
+    sound = sound,
+    menu = menu,
+    scene = scene
 }

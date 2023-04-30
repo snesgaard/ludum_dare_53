@@ -56,6 +56,22 @@ function loaders.test_level()
         },
         "desk"
     )
+
+    game.system.score.show()
+end
+
+function loaders.main_menu()
+    local menu_items = list("Play", "Options", "Quit")
+    stack.assemble(
+        {
+            {nw.component.menu, menu_items, 1},
+            {nw.component.drawable, nw.drawable.menu},
+            {nw.component.position, painter.relative(0.5, 0.5)},
+            {nw.component.main_menu_action}
+        },
+        constant.id.main_menu
+    )
+    
 end
 
 return loaders

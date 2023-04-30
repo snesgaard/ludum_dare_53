@@ -15,6 +15,7 @@ local function event_loop()
         if not game.system.score.player_lose() then
             nw.system.timer.spin()
             nw.system.particles.spin()
+            game.system.menu.spin()
             game.system.sound.spin()
             game.system.explosion.spin()
             game.system.customer.spin()
@@ -22,12 +23,14 @@ local function event_loop()
             game.system.score.spin()
         end
     end
+
+    game.system.scene.load()
 end
 
 function love.load()
-    loader.test_level()
-
-    game.system.explosion.spawn(100, 100)
+    --loader.main_menu()
+    game.system.scene.request("main_menu")
+    --loader.test_level()
 
     bg_music = love.audio.newSource("art/sound/bar.mp3", "static")
     bg_music:setLooping(true)
@@ -64,6 +67,13 @@ end
 
 function love.keypressed(key)
     if key == "escape" then love.event.quit() end
-    if key == "p" then paused = not paused end
+    if key == "p" then
+        paused = not paused
+        print("pause", paused)
+    end
+    if key == "r" then
+        stack.reset()
+        loader.test_level()
+    end
     input.keypressed(key)
 end
