@@ -32,6 +32,7 @@ function love.load()
     game.system.scene.request("main_menu")
     --loader.test_level()
 
+    love.audio.setVolume(0)
     bg_music = love.audio.newSource("art/sound/bar.mp3", "static")
     bg_music:setLooping(true)
     bg_music:setVolume(1)

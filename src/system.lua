@@ -268,7 +268,7 @@ function customer.pick_patron()
 end
 
 function customer.spin_once(id, settings)
-    local scale = 1 + math.log(1 + customer.get_runtime() / 75.0)
+    local scale = 1 + math.log(1 + customer.get_runtime() / 100.0)
     local timer = stack.ensure(
         nw.component.customer_timer, id,
         settings.duration_min, settings.duration_max,

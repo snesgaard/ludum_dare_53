@@ -48,4 +48,6 @@ function component.gui_box(x, y, w, h) return spatial(x, y, w, h) end
 
 function component.text(t) return t end
 
+function component.focus() return true end
+
 return component

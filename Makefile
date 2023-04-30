@@ -1,4 +1,4 @@
-title=most_stressed_batter_LD51
+title=fantasy_retail_simulator
 
 linux_binary=build/$(title)_linux.zip
 windows_zip=build/$(title)_win64.zip
@@ -62,7 +62,7 @@ $(love_win64_zip):
 	wget https://github.com/love2d/love/releases/download/11.4/love-11.4-win64.zip -O $@
 
 $(love_win64): $(love_win64_zip)
-	cd build; unzip love-11.3-win64.zip
+	cd build; unzip love-11.4-win64.zip
 
 $(love_file): build
 	@mkdir -p $(dir $@)

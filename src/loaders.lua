@@ -76,7 +76,7 @@ function loaders.main_menu()
         {
             {nw.component.drawable, nw.drawable.text_box},
             {nw.component.position, painter.relative(0.5, 0.25)},
-            {nw.component.gui_box, spatial():expand(200, 75):unpack()},
+            {nw.component.gui_box, spatial():expand(300, 75):unpack()},
             {nw.component.text, "Fantasy Retail Simulator"},
             {nw.component.align, "center"},
             {nw.component.valign, "center"},
