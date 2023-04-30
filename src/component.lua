@@ -33,4 +33,6 @@ function component.life(s) return s or constant.max_lives end
 
 function component.time(t) return t or 0 end
 
+function component.patron(patron) return patron end
+
 return component

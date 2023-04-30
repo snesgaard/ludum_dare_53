@@ -6,8 +6,9 @@ painter.layer = {
     background = -1,
     post = 0,
     desk = 1,
-    player = 2,
-    post_ui = 3
+    post_front = 2,
+    player = 3,
+    post_ui = 4
 }
 
 function painter.screen_size()

@@ -125,6 +125,7 @@ function player_control.spin()
         elseif key == "up" then
             player_control.move_up()
         elseif key == "down" then
+            print("down")
             player_control.move_down()
         elseif key == "space" then
             player_control.trigger()
